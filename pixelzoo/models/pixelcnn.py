@@ -51,6 +51,7 @@ class MaskedConv2D(nn.Conv2d):
 
 class PixelCNN(nn.Module):
     """
+    Simple PixelCNN model architecture
     """
     def __init__(self):
 
@@ -88,6 +89,7 @@ class PixelCNN(nn.Module):
             samples(torch.Tensor): a set of sampled images.
                                    shape: (n,c,h,w)
         """
+
         samples = torch.zeros(n, 1, 28, 28).to(self.device)
         with torch.no_grad():
             for r in range(28):
@@ -95,4 +97,5 @@ class PixelCNN(nn.Module):
                     logits = self.net(samples)[:, :, r, c]
                     probs = torch.sigmoid(logits)
                     samples[:, :, r, c] = torch.bernoulli(probs)
+
         return samples.cpu()
