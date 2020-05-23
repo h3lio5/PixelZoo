@@ -52,6 +52,47 @@ class MaskedConv2D(nn.Conv2d):
 class PixelCNN(nn.Module):
     """
     """
-
     def __init__(self):
-        
+
+        super().__init__()
+        model = [
+            MaskedConv2D('A', 1, 64, 7, padding=3, bias=False),
+            nn.BatchNorm2d(64),
+            nn.ReLU(True)
+        ]
+        for _ in range(8):
+            model.extend([
+                MaskedConv2D('B', 64, 64, 7, padding=3),
+                nn.BatchNorm2d(64),
+                nn.ReLU(True)
+            ])
+        model.append(MaskedConv2D('B', 64, 1, 7, padding=3, bias=False))
+        self.net = nn.Sequential(*model)
+
+    def nll(self, input):
+        """
+        Arguments:
+            input(torch.Tensor): batch of images.
+                                 shape: (batch_size,C,H,W)
+        Returns:
+            Negative log likelihood of the data
+        """
+        logits = self.net(input)
+        return F.binary_cross_entropy_with_logits(logits, input)
+
+    def sample(self, n):
+        """
+        Arguments:
+            n(int): Number of images to sample
+        Returns:
+            samples(torch.Tensor): a set of sampled images.
+                                   shape: (n,c,h,w)
+        """
+        samples = torch.zeros(n, 1, 28, 28).to(self.device)
+        with torch.no_grad():
+            for r in range(28):
+                for c in range(28):
+                    logits = self.net(samples)[:, :, r, c]
+                    probs = torch.sigmoid(logits)
+                    samples[:, :, r, c] = torch.bernoulli(probs)
+        return samples.cpu()
