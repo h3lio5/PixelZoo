@@ -4,6 +4,7 @@ This module contains the model architecture proposed in the paper PixelRNN (Oord
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 
 
 class MaskedConv2D(nn.Conv2d):
@@ -24,11 +25,20 @@ class MaskedConv2D(nn.Conv2d):
         assert mask_type == 'A' or mask_type == 'B'
         super().__init__(*args, **kwargs)
         self.register_buffer('mask', torch.zeros_like(self.weight))
+        self.create_mask(mask_type)
+
+    def forward(self, input):
+        """
+        Arguments:
+            input(torch.Tensor): Batch of images.
+                                 shape: (batch_size,C,H,W)
+        """
+        return F.conv2d(input, self.weight * self.mask, self.bias, self.stride,
+                        self.padding, self.dilation, self.groups)
 
     def create_mask(self, mask_type):
         """
         Creates a mask of the required type.
-        
         Arguments:
             mask_type(str): type of the mask, i.e. 'A' or 'B'.
         """
@@ -37,3 +47,11 @@ class MaskedConv2D(nn.Conv2d):
         self.mask[:, :, k // 2, :k // 2] = 1
         if mask_type == 'B':
             self.mask[:, :, k // 2, k // 2] = 1
+
+
+class PixelCNN(nn.Module):
+    """
+    """
+
+    def __init__(self):
+        
