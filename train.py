@@ -36,7 +36,7 @@ for epoch in tqdm.trange(25):
     for step, (images, labels) in enumerate(train_dataloader):
 
         print(step + 1)
-        # nll of the batched data
+       # nll of the batched data
         loss = model.nll(images.to(device))
         train_error.append(loss.item())
         optimizer.zero_grad()
@@ -61,7 +61,7 @@ for epoch in tqdm.trange(25):
     # sample images
     model.eval()
     with torch.no_grad():
-        sampled_images = model.sample(64)
+  "     sampled_images = model.sample(64)
         utils.save_image(
             sampled_images,
             'images/pixelcnn/mnist/sample_{:02d}.png'.format(epoch + 1),
