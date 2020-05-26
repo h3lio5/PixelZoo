@@ -53,7 +53,12 @@ class PixelCNN(nn.Module):
     """
     Simple PixelCNN model architecture
     """
-    def __init__(self, num_layers=8, device='cpu'):
+    def __init__(self, num_layers=8, logits_dist='sigmoid', device='cpu'):
+        """
+        Args:
+            num_layers(int): Number of intermediate layers
+            logits_dist(str): The distribution of the logits. Values: 'sigmoid' or 'categorical'.
+        """
 
         super().__init__()
         model = [
@@ -67,7 +72,12 @@ class PixelCNN(nn.Module):
                 nn.BatchNorm2d(64),
                 nn.ReLU(True)
             ])
-        model.append(MaskedConv2D('B', 64, 1, 7, padding=3, bias=False))
+        # The final layer learns to represent sigmoid distribution.
+        if logits_dist == 'sigmoid':
+            model.append(MaskedConv2D('B', 64, 1, 7, padding=3, bias=False))
+        # The final layer learns to represent categorical distribution.
+        else:
+            model.append(MaskedConv2D('B', 64, 256, 7, padding=3, bias=False))
         self.net = nn.Sequential(*model)
         self.device = device
 
