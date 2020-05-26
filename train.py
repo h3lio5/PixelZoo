@@ -7,19 +7,28 @@ import torch.optim as optim
 import time, os, tqdm
 import numpy as np
 
+
 # Load train and test data
-train_dataloader = data.DataLoader(datasets.MNIST(
-    'data', train=True, download=True, transform=transforms.ToTensor()),
-                                   batch_size=256,
-                                   shuffle=True,
-                                   num_workers=4,
-                                   pin_memory=True)
-test_dataloader = data.DataLoader(datasets.MNIST(
-    'data', train=False, download=True, transform=transforms.ToTensor()),
-                                  batch_size=256,
-                                  shuffle=False,
-                                  num_workers=4,
-                                  pin_memory=True)
+def load_data(batch_size=256, num_workers=4, shuffle=True):
+    """
+    Loads training and testing dataloaders
+    """
+    train_dataloader = data.DataLoader(datasets.MNIST(
+        'data', train=True, download=True, transform=transforms.ToTensor()),
+                                       batch_size=batch_size,
+                                       shuffle=shuffle,
+                                       num_workers=num_workers,
+                                       pin_memory=True)
+    test_dataloader = data.DataLoader(datasets.MNIST(
+        'data', train=False, download=True, transform=transforms.ToTensor()),
+                                      batch_size=batch_size,
+                                      shuffle=shuffle,
+                                      num_workers=num_workers,
+                                      pin_memory=True)
+    return train_dataloader, test_dataloader
+
+
+train_dataloader, test_dataloader = load_data()
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 # Initialize the model
@@ -30,8 +39,9 @@ model.to(device=device)
 optimizer = optim.Adam(model.parameters())
 # Initialze the EarlyStopping Callback
 callback = EarlyStopping()
+start_time = time.time()
 # Start the training loop
-for epoch in tqdm.trange(25):
+while True:
     train_error = []
 
     train_time = time.time()
@@ -75,5 +85,8 @@ for epoch in tqdm.trange(25):
                 train_time, test_time))
 
     if callback.early_stop(epoch + 1, np.mean(test_error)):
-        print('Early stopping!')
+        end_time = time.time()
+        print(
+            f'Early stopping after {epoch+1} epochs, training time: {(end_time-start_time)/60} minutes'
+        )
         break
