@@ -12,11 +12,11 @@
 
 class EarlyStopping():
     """
-    Early stopping callback to speedup convergence and prevent overfitting.
+    Early stopping callback to speedup convergence and prevent overfitting
     Implementation inspired from https://github.com/PyTorchLightning/PyTorch-Lightning/blob/master/pytorch_lightning/callbacks/early_stopping.py#L19-L141
     """
 
-    def __init__(self, monitor='val_loss', min_delta=0.1, patience=3):
+    def __init__(self,monitor='val_loss', min_delta=0.01, patience=3):
         """
         Parameters:
             monitor(str): quantity to be monitored. Possible values: 'val_loss' or 'val_acc'.
