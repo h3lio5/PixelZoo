@@ -58,13 +58,13 @@ class PixelCNN(nn.Module):
         super().__init__()
         model = [
             MaskedConv2D('A', 1, 64, 7, padding=3, bias=False),
-            nn.BatchNorm2d(64),
+            # nn.BatchNorm2d(64),
             nn.ReLU(True)
         ]
         for _ in range(num_layers):
             model.extend([
                 MaskedConv2D('B', 64, 64, 7, padding=3),
-                nn.BatchNorm2d(64),
+                # nn.BatchNorm2d(64),
                 nn.ReLU(True)
             ])
         model.append(MaskedConv2D('B', 64, 1, 7, padding=3, bias=False))
