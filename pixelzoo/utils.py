@@ -17,6 +17,9 @@ class EarlyStopping():
 
     def __init__(self, monitor, patience):
         """
+        Parameters:
+            monitor(str): 
+            patience(int): 
         """
 
         self.wait = 0
