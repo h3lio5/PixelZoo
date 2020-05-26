@@ -29,7 +29,7 @@ model.to(device=device)
 # Initialize the optimizer
 optimizer = optim.Adam(model.parameters())
 # Initialze the EarlyStopping Callback
-callback = EarlyStopping() 
+callback = EarlyStopping()
 # Start the training loop
 for epoch in tqdm.trange(25):
     train_error = []
@@ -38,8 +38,7 @@ for epoch in tqdm.trange(25):
     model.train()
     for step, (images, labels) in enumerate(train_dataloader):
 
-        print(step + 1)
-       # nll of the batched data
+        # nll of the batched data
         loss = model.nll(images.to(device))
         train_error.append(loss.item())
         optimizer.zero_grad()
@@ -72,8 +71,9 @@ for epoch in tqdm.trange(25):
             padding=0)
     print(
         'epoch={}; nll_train={:.7f}; nll_te={:.7f}; time_train={:.1f}s; time_test={:.1f}s'
-        .format(epoch + 1, np.mean(train_error), np.mean(test_error),train_time, test_time))
+        .format(epoch + 1, np.mean(train_error), np.mean(test_error),
+                train_time, test_time))
 
-    if callback.early_stop(epoch+1,test_error):
-        print('Early stopping!)
+    if callback.early_stop(epoch + 1, test_error):
+        print('Early stopping!')
         break
