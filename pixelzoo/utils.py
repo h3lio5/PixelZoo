@@ -1,3 +1,5 @@
+import torch
+
 class EarlyStopping():
       """
       Early stopping callback to speedup convergence and prevent overfitting
