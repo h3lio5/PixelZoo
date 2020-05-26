@@ -15,18 +15,24 @@ def load_data(dataset='mnist', batch_size=512, num_workers=4, shuffle=True):
     Loads training and testing dataloaders
     """
     if dataset == 'mnist':
-        train_dataloader = data.DataLoader(datasets.MNIST(
-            'data', train=True, download=True, transform=transforms.ToTensor()),
-                                        batch_size=batch_size,
-                                        shuffle=shuffle,
-                                        num_workers=num_workers,
-                                        pin_memory=True)
+        train_dataloader = data.DataLoader(
+            datasets.MNIST('data',
+                           train=True,
+                           download=True,
+                           transform=transforms.ToTensor()),
+            batch_size=batch_size,
+            shuffle=shuffle,
+            num_workers=num_workers,
+            pin_memory=True)
         test_dataloader = data.DataLoader(datasets.MNIST(
-            'data', train=False, download=True, transform=transforms.ToTensor()),
-                                        batch_size=batch_size,
-                                        shuffle=shuffle,
-                                        num_workers=num_workers,
-                                        pin_memory=True)
+            'data',
+            train=False,
+            download=True,
+            transform=transforms.ToTensor()),
+                                          batch_size=batch_size,
+                                          shuffle=shuffle,
+                                          num_workers=num_workers,
+                                          pin_memory=True)
     return train_dataloader, test_dataloader
 
 
@@ -37,8 +43,8 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 def main(args):
     # Initialize the model
-    model = PixelCNN(device=device)
-    model.to(logits_dist=args.logits_dist, device=device)
+    model = PixelCNN(logits_dist=args.logits_dist, device=device)
+    model.to(device=device)
 
     # Initialize the optimizer
     optimizer = optim.Adam(model.parameters())
@@ -84,7 +90,8 @@ def main(args):
             sampled_images = model.sample(64)
             utils.save_image(
                 sampled_images,
-                'images/pixelcnn/mnist/{}_sample_{:02d}.png'.format(epoch, args.logits_dist),
+                'images/pixelcnn/mnist/{}_sample_{:02d}.png'.format(
+                    epoch, args.logits_dist),
                 nrow=12,
                 padding=0)
         sample_time = time.time() - sample_start
@@ -93,11 +100,14 @@ def main(args):
             'epoch={}; nll_train={:.7f} bits/dim; nll_te={:.7f} bits/dim; time_train={:.1f}s; time_test={:.1f}s: sampling time={:.1f}'
             .format(epoch,
                     np.mean(train_error) / np.log(2),
-                    np.mean(test_error) / np.log(2), train_time, test_time, sample_time))
+                    np.mean(test_error) / np.log(2), train_time, test_time,
+                    sample_time))
         epoch += 1
         if callback.early_stop(epoch, np.mean(test_error) / np.log(2)):
             total_time = time.time() - start_time
-            print(f'Early stopping after {epoch} epochs, training time: {total_time/60} minutes')
+            print(
+                f'Early stopping after {epoch} epochs, training time: {total_time/60} minutes'
+            )
             break
 
 
@@ -109,8 +119,8 @@ if __name__ == '__main__':
         type=str,
         default='pixelcnn',
         help=
-        'The model you wish to train. This repo currently supports the following models: pixelcnn, pixelcnn++, 
-        gatedpixelcnn, conditionalpixelcnn, pixelsnail')
+        'The model you wish to train: pixelcnn, pixelcnn++, gatedpixelcnn, conditionalpixelcnn, pixelsnail'
+    )
     parser.add_argument(
         '--logits_dist',
         type=str,
