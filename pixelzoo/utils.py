@@ -4,6 +4,8 @@ import logging
 log = logging.getLogger('logger')
 log.setLevel(logging.INFO)
 
+torch_inf = torch.tensor(np.Inf)
+
 
 class EarlyStopping():
     """
