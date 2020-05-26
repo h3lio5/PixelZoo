@@ -91,7 +91,7 @@ def main(args):
             utils.save_image(
                 sampled_images,
                 'images/pixelcnn/mnist/{}_sample_{:02d}.png'.format(
-                    epoch, args.logits_dist),
+                    args.logits_dist, epoch),
                 nrow=12,
                 padding=0)
         sample_time = time.time() - sample_start
