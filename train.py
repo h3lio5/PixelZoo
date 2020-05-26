@@ -29,7 +29,7 @@ def load_data(batch_size=256, num_workers=4, shuffle=True):
 
 
 train_dataloader, test_dataloader = load_data()
-
+print("Dataloaders loaded!")
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 # Initialize the model
 model = PixelCNN(device=device)
@@ -42,6 +42,7 @@ callback = EarlyStopping()
 start_time = time.time()
 # Start the training loop
 epoch = 1
+print("Start training!")
 while True:
     train_error = []
 
