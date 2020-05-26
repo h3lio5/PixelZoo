@@ -74,6 +74,6 @@ for epoch in tqdm.trange(25):
         .format(epoch + 1, np.mean(train_error), np.mean(test_error),
                 train_time, test_time))
 
-    if callback.early_stop(epoch + 1, test_error):
+    if callback.early_stop(epoch + 1, np.mean(test_error)):
         print('Early stopping!')
         break
