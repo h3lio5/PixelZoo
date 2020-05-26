@@ -2,3 +2,5 @@ venv
 .vscode
 pixelzoo.egg-info
 data
+pixelzoo/__pycache__
+pixelzoo/models/__pycache__
