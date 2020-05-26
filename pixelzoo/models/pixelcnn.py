@@ -53,7 +53,7 @@ class PixelCNN(nn.Module):
     """
     Simple PixelCNN model architecture
     """
-    def __init__(self, num_layers=8, logits_dist='sigmoid', device='cpu'):
+    def __init__(self, num_layers=8, logits_dist='categorical', device='cpu'):
         """
         Args:
             num_layers(int): Number of intermediate layers
@@ -90,6 +90,9 @@ class PixelCNN(nn.Module):
             Negative log likelihood of the data
         """
         logits = self.net(input)
+        if self.logits_dist == 'categorical':
+            return F.cross_entropy(logits, (input * 255).long())
+
         return F.binary_cross_entropy_with_logits(logits, input)
 
     def sample(self, n):
@@ -106,7 +109,12 @@ class PixelCNN(nn.Module):
             for r in range(28):
                 for c in range(28):
                     logits = self.net(samples)[:, :, r, c]
-                    probs = torch.sigmoid(logits)
-                    samples[:, :, r, c] = torch.bernoulli(probs)
+                    if self.logits_dist == 'categorical':
+                        probs = F.softmax(logits, dim=1)
+                        samples[:, :, r,
+                               c] = torch.multinomial(probs, 1).float() / 255.
+                    else:
+                        probs = torch.sigmoid(logits)
+                        samples[:, :, r, c] = torch.bernoulli(probs)
 
         return samples.cpu()
