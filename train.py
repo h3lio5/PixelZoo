@@ -10,15 +10,15 @@ import numpy as np
 # Load train and test data
 train_dataloader = data.DataLoader(datasets.MNIST(
     'data', train=True, download=True, transform=transforms.ToTensor()),
-                                   batch_size=128,
+                                   batch_size=256,
                                    shuffle=True,
-                                   num_workers=1,
+                                   num_workers=4,
                                    pin_memory=True)
 test_dataloader = data.DataLoader(datasets.MNIST(
     'data', train=False, download=True, transform=transforms.ToTensor()),
-                                  batch_size=128,
+                                  batch_size=256,
                                   shuffle=False,
-                                  num_workers=1,
+                                  num_workers=4,
                                   pin_memory=True)
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
