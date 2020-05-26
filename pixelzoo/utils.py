@@ -1,5 +1,6 @@
 import torch
 import logging
+import numpy as np
 
 log = logging.getLogger('logger')
 log.setLevel(logging.INFO)
