@@ -21,7 +21,7 @@ class EarlyStopping():
 
     def __init__(self,
                  monitor='loss',
-                 min_delta=0.001,
+                 min_delta=0.0001,
                  patience=3,
                  mode='auto'):
         """
