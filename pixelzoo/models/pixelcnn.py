@@ -92,7 +92,7 @@ class PixelCNN(nn.Module):
         """
         logits = self.net(input)
         if self.logits_dist == 'categorical':
-            return F.cross_entropy(logits, (input * 255).long())
+            return F.cross_entropy(logits, (input[:, 0] * 255).long())
 
         return F.binary_cross_entropy_with_logits(logits, input)
 
