@@ -105,9 +105,8 @@ def main(args):
         epoch += 1
         if callback.early_stop(epoch, np.mean(test_error) / np.log(2)):
             total_time = time.time() - start_time
-            print(
-                f'Early stopping after {epoch} epochs, training time: {total_time/60} minutes'
-            )
+            print('Early stopping after {} epochs, training time: {} minutes'.
+                  format(epoch, total_time / 60))
             break
 
 
