@@ -83,10 +83,10 @@ while True:
     print(
         'epoch={}; nll_train={:.7f} bits/dim; nll_te={:.7f} bits/dim; time_train={:.1f}s; time_test={:.1f}s'
         .format(epoch + 1,
-                np.mean(train_error) / np.log(2):.4f, np.mean(test_error)/np.log(2):.4f,
-                train_time, test_time))
+                np.mean(train_error) / np.log(2),
+                np.mean(test_error) / np.log(2), train_time, test_time))
     epoch += 1
-    if callback.early_stop(epoch + 1, np.mean(test_error)/np.log(2):.4f):
+    if callback.early_stop(epoch + 1, np.mean(test_error) / np.log(2)):
         end_time = time.time()
         print(
             f'Early stopping after {epoch+1} epochs, training time: {(end_time-start_time)/60} minutes'
