@@ -50,7 +50,7 @@ def main(args):
     print("Start training!")
 
     while True:
-        
+
         train_error = []
         train_time = time.time()
         model.train()
@@ -98,8 +98,7 @@ def main(args):
         if callback.early_stop(epoch, np.mean(test_error) / np.log(2)):
             end_time = time.time()
             print(
-                f'Early stopping after {epoch} epochs, training time: {(end_time-start_time)/60} minutes'
-            )
+                f'Early stopping after {epoch} epochs, training time: {(end_time-start_time)/60} minutes')
             break
 
 
