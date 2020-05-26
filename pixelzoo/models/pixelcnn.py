@@ -53,7 +53,7 @@ class PixelCNN(nn.Module):
     """
     Simple PixelCNN model architecture
     """
-    def __init__(self, num_layers=8, device='cpu'):
+    def __init__(self, num_layers=3, device='cpu'):
 
         super().__init__()
         model = [
