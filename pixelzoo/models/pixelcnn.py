@@ -80,6 +80,7 @@ class PixelCNN(nn.Module):
             model.append(MaskedConv2D('B', 64, 256, 7, padding=3, bias=False))
         self.net = nn.Sequential(*model)
         self.device = device
+        self.logits_dist = logits_dist
 
     def nll(self, input):
         """
@@ -112,7 +113,7 @@ class PixelCNN(nn.Module):
                     if self.logits_dist == 'categorical':
                         probs = F.softmax(logits, dim=1)
                         samples[:, :, r,
-                               c] = torch.multinomial(probs, 1).float() / 255.
+                                c] = torch.multinomial(probs, 1).float() / 255.
                     else:
                         probs = torch.sigmoid(logits)
                         samples[:, :, r, c] = torch.bernoulli(probs)
