@@ -2,6 +2,7 @@ import torch
 from torch.utils import data
 from torchvision import datasets, transforms, utils
 from pixelzoo.models.pixelcnn import PixelCNN
+from pixelzoo.utils import EarlyStopping
 import torch.optim as optim
 import time, os, tqdm
 import numpy as np
@@ -27,6 +28,8 @@ model.to(device=device)
 
 # Initialize the optimizer
 optimizer = optim.Adam(model.parameters())
+# Initialze the EarlyStopping Callback
+callback = EarlyStopping() 
 # Start the training loop
 for epoch in tqdm.trange(25):
     train_error = []
@@ -61,7 +64,7 @@ for epoch in tqdm.trange(25):
     # sample images
     model.eval()
     with torch.no_grad():
-  "     sampled_images = model.sample(64)
+        sampled_images = model.sample(64)
         utils.save_image(
             sampled_images,
             'images/pixelcnn/mnist/sample_{:02d}.png'.format(epoch + 1),
@@ -69,5 +72,8 @@ for epoch in tqdm.trange(25):
             padding=0)
     print(
         'epoch={}; nll_train={:.7f}; nll_te={:.7f}; time_train={:.1f}s; time_test={:.1f}s'
-        .format(epoch + 1, np.mean(train_error), np.mean(test_error),
-                train_time, test_time))
+        .format(epoch + 1, np.mean(train_error), np.mean(test_error),train_time, test_time))
+
+    if callback.early_stop(epoch+1,test_error):
+        print('Early stopping!)
+        break
