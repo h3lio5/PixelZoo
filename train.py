@@ -78,18 +78,18 @@ while True:
         sampled_images = model.sample(64)
         utils.save_image(
             sampled_images,
-            'images/pixelcnn/mnist/sample_{:02d}.png'.format(epoch + 1),
+            'images/pixelcnn/mnist/sample_{:02d}.png'.format(epoch),
             nrow=12,
             padding=0)
     print(
         'epoch={}; nll_train={:.7f} bits/dim; nll_te={:.7f} bits/dim; time_train={:.1f}s; time_test={:.1f}s'
-        .format(epoch + 1,
+        .format(epoch ,
                 np.mean(train_error) / np.log(2),
                 np.mean(test_error) / np.log(2), train_time, test_time))
     epoch += 1
-    if callback.early_stop(epoch + 1, np.mean(test_error) / np.log(2)):
+    if callback.early_stop(epoch , np.mean(test_error) / np.log(2)):
         end_time = time.time()
         print(
-            f'Early stopping after {epoch+1} epochs, training time: {(end_time-start_time)/60} minutes'
+            f'Early stopping after {epoch} epochs, training time: {(end_time-start_time)/60} minutes'
         )
         break
