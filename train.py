@@ -84,13 +84,13 @@ def main(args):
         test_time = time.time() - test_time
 
         sample_start = time.time()
-        # sample images
+        # ========== sample images =========== #
         model.eval()
         with torch.no_grad():
             sampled_images = model.sample(64)
             utils.save_image(
                 sampled_images,
-                'images/pixelcnn/mnist/{}_sample_{:02d}.png'.format(
+                'images/pixelcnn/mnist/0.0001_{}_sample_{:02d}.png'.format(
                     args.logits_dist, epoch),
                 nrow=12,
                 padding=0)
