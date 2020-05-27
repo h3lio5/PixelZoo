@@ -8,6 +8,7 @@ class GatedPixelCNN(nn.Module):
     """
     def __init__(self):
         """
+        
         """
 
-        super().__init__()
+        super(GatedPixelCNN,self).__init__()
