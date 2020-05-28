@@ -14,3 +14,10 @@ source .env/bin/activate
 pip install -r requirements.txt
 pip install -e .
 ```
+## 2. Training Instructions
+
+
+
+## 3. Implementation Details
+* ### PixelCNN
+ 
