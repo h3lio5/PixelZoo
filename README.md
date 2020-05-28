@@ -18,6 +18,7 @@ pip install -e .
 
 
 
-## 3. Implementation Details
-* ### PixelCNN
+## 3. Results
+### PixelCNN 
+ * With a categorical distribution over 255 pixel values in the last layer, the model appears to perform much better but takes a little longer to train.
  
