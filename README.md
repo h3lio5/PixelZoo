@@ -1,6 +1,8 @@
 # PixelZoo
 Implementation of various pixel-based autoregressive models like pixelCNN, GatedPixelCNN, ConditionalPixelCNN, PixelCNN++, and PixelSNAIL.
 
+**Note** : The project is still in progress.
+
 ## 1. Setup Instructions and Dependencies
 You may setup the repository on your local machine by either downloading it or running the following line on `terminal`.
 ``` Batchfile
