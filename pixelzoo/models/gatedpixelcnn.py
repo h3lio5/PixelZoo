@@ -164,7 +164,7 @@ class GatedPixelCNN(nn.Module):
         """
         
         """
-
+        samples = torch.zeros(n, 2, 32, 32)
         with torch.no_grad():
             for h in range(32):
                 for w in range(32):

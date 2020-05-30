@@ -88,6 +88,7 @@ def main(args):
         for step, (images, labels) in enumerate(train_dataloader):
             # nll of the batched data
             loss = model.nll(images.to(device))
+            del images, labels
             train_error.append(loss.item())
             optimizer.zero_grad()
             loss.backward()
@@ -104,6 +105,7 @@ def main(args):
             for images, labels in test_dataloader:
                 # nll of the test data batch
                 loss = model.nll(images.to(device))
+                del images, labels
                 test_error.append(loss.item())
 
         test_time = time.time() - test_time
@@ -119,6 +121,8 @@ def main(args):
                 format(args.logits_dist, epoch),
                 nrow=12,
                 padding=0)
+            del sampled_images
+
         sample_time = time.time() - sample_start
 
         print(
