@@ -148,7 +148,7 @@ class GatedPixelCNN(nn.Module):
         b, c, h, w = x.size()
 
         x = self.conv1(x)
-        h_output, v_output = self.net((x, x))
+        h_output, v_output = self.model((x, x))
         target = self.final_layer(h_output)
 
         return target.view(b, c, 256, h, w).transpose(1, 2)
