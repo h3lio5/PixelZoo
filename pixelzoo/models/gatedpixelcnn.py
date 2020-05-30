@@ -173,5 +173,5 @@ class GatedPixelCNN(nn.Module):
                         probs = F.softmax(logits, dim=1)
                         samples[:, c, h,
                                 w] = torch.multinomial(probs, 1).float() / 255.
-
+        del logits, probs
         return samples.cpu()
