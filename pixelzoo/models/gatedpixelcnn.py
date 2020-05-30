@@ -118,7 +118,7 @@ class GatedConv2D(nn.Module):
 
         top, bottom = torch.chunk(x, 2, dim=1)
 
-        return F.tanh(top) * F.sigmoid(bottom)
+        return torch.tanh(top) * torch.sigmoid(bottom)
 
 
 class GatedPixelCNN(nn.Module):
