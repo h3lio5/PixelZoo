@@ -1,7 +1,7 @@
 import torch
 from torch.utils import data
 from torchvision import datasets, transforms, utils
-from pixelzoo.models.pixelcnn import PixelCNN
+from pixelzoo.models import PixelCNN, GatedPixelCNN
 from pixelzoo.utils import EarlyStopping
 import torch.optim as optim
 import time, os
@@ -10,7 +10,7 @@ import argparse
 
 
 # Load train and test data
-def load_data(dataset='mnist', batch_size=512, num_workers=4, shuffle=True):
+def load_data(dataset='cifar10', batch_size=512, num_workers=4, shuffle=True):
     """
     Loads training and testing dataloaders
     """
@@ -33,6 +33,27 @@ def load_data(dataset='mnist', batch_size=512, num_workers=4, shuffle=True):
                                           shuffle=shuffle,
                                           num_workers=num_workers,
                                           pin_memory=True)
+
+    else:
+        train_dataloader = data.DataLoader(
+            datasets.CIFAR10('data',
+                             train=True,
+                             download=True,
+                             transform=transforms.ToTensor()),
+            batch_size=batch_size,
+            shuffle=shuffle,
+            num_workers=num_workers,
+            pin_memory=True)
+        test_dataloader = data.DataLoader(datasets.CIFAR10(
+            'data',
+            train=False,
+            download=True,
+            transform=transforms.ToTensor()),
+                                          batch_size=batch_size,
+                                          shuffle=shuffle,
+                                          num_workers=num_workers,
+                                          pin_memory=True)
+
     return train_dataloader, test_dataloader
 
 
@@ -43,7 +64,11 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 def main(args):
     # Initialize the model
-    model = PixelCNN(logits_dist=args.logits_dist, device=device)
+    if args.model == 'pixelcnn':
+        model = PixelCNN(logits_dist=args.logits_dist, device=device)
+    elif args.model == 'gatedpixelcnn':
+        model = GatedPixelCNN(device=device)
+
     model.to(device=device)
 
     # Initialize the optimizer
@@ -90,8 +115,8 @@ def main(args):
             sampled_images = model.sample(64)
             utils.save_image(
                 sampled_images,
-                'images/pixelcnn/mnist/0.0001_{}_sample_{:02d}.png'.format(
-                    args.logits_dist, epoch),
+                'images/gatedpixelcnn/cifar10/0.0001_{}_sample_{:02d}.png'.
+                format(args.logits_dist, epoch),
                 nrow=12,
                 padding=0)
         sample_time = time.time() - sample_start
@@ -130,7 +155,7 @@ if __name__ == '__main__':
                         default='mnist',
                         help='Dataset to train on: mnist or cifar')
 
-    parser.add_argument('--batch_size', type=int, default=512)
+    parser.add_argument('--batch_size', type=int, default=256)
     args = parser.parse_args()
 
     load_data(args.dataset, args.batch_size)
