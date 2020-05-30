@@ -162,8 +162,10 @@ class GatedPixelCNN(nn.Module):
 
     def sample(self, n):
         """
+        
         """
 
+<<<<<<< HEAD
         samples = torch.zeros(n, 3, 32, 32).to(self.device)
 
         with torch.no_grad():
@@ -176,3 +178,6 @@ class GatedPixelCNN(nn.Module):
                                 w] = torch.multinomial(probs, 1).float() / 255.
 
         return samples.cpu()
+=======
+        super(GatedPixelCNN,self).__init__()
+>>>>>>> 786438a488fa44df05db0edc5250c218469f8647

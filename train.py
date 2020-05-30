@@ -115,9 +115,15 @@ def main(args):
             sampled_images = model.sample(64)
             utils.save_image(
                 sampled_images,
+<<<<<<< HEAD
                 'images/gatedpixelcnn/cifar10/0.0001_{}_sample_{:02d}.png'.
                 format(args.logits_dist, epoch),
                 nrow=12,
+=======
+                'images/pixelcnn/mnist/0.0001_{}_sample_{:02d}.png'.format(
+                    args.logits_dist, epoch),
+                nrow=8,
+>>>>>>> 786438a488fa44df05db0edc5250c218469f8647
                 padding=0)
         sample_time = time.time() - sample_start
 
