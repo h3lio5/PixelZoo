@@ -124,7 +124,7 @@ class GatedConv2D(nn.Module):
 class GatedPixelCNN(nn.Module):
     """
     """
-    def __init__(self, c=3, channels=63, n_layers=3, device='cpu'):
+    def __init__(self, c=3, channels=63, n_layers=4, device='cpu'):
         super().__init__()
 
         self.conv1 = nn.Conv2d(c, channels, 1, groups=c)
@@ -172,6 +172,7 @@ class GatedPixelCNN(nn.Module):
                         logits = self.net(samples)[:, :, c, h, w]
                         probs = F.softmax(logits, dim=1)
                         samples[:, c, h,
-                                w] = (torch.multinomial(probs, 1).float() / 255.).squeeze()
+                                w] = (torch.multinomial(probs, 1).float() /
+                                      255.).squeeze()
         del logits, probs
         return samples.cpu()

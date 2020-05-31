@@ -74,7 +74,7 @@ def main(args):
     # Initialize the optimizer
     optimizer = optim.Adam(model.parameters())
     # Initialze the EarlyStopping Callback
-    callback = EarlyStopping()
+    callback = EarlyStopping(min_delta=0.01, patience=3)
     start_time = time.time()
     # Start the training loop
     epoch = 1
