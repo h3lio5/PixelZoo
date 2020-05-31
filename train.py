@@ -117,9 +117,9 @@ def main(args):
             sampled_images = model.sample(64)
             utils.save_image(
                 sampled_images,
-                'images/gatedpixelcnn/cifar10/0.0001_{}_sample_{:02d}.png'.
-                format(args.logits_dist, epoch),
-                nrow=12,
+                'images/gatedpixelcnn/cifar10/0.0001__sample_{:02d}.png'.
+                format(epoch),
+                nrow=8,
                 padding=0)
         del sampled_images
 
