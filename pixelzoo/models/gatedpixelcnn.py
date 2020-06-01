@@ -128,14 +128,13 @@ class GatedPixelCNN(nn.Module):
 
         self.conv1 = nn.Conv2d(c, channels, 1, groups=c)
         model = [
-            GatedConv2D('A',
-                        channels,
+            GatedConv2D(channels,
                         channels,
                         self_connection=False,
                         residual_connection=False)
         ]
         for _ in range(n_layers - 1):
-            model.extend([GatedConv2D('B', channels, channels)])
+            model.extend([GatedConv2D(channels, channels)])
         self.model = nn.Sequential(*model)
         self.final_layer = nn.Conv2d(channels, 256 * c, 1, groups=c)
 
