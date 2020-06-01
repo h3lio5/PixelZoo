@@ -1,6 +1,6 @@
 import torch
-from torch.utils import data
-from torchvision import datasets, transforms, utils
+from torchvision import utils
+from pixelzoo.dataloader import load_data
 from pixelzoo.models import PixelCNN, GatedPixelCNN
 from pixelzoo.utils import EarlyStopping
 import torch.optim as optim
@@ -9,60 +9,12 @@ import numpy as np
 import argparse
 
 
-# Load train and test data
-def load_data(dataset='cifar10', batch_size=512, num_workers=4, shuffle=True):
-    """
-    Loads training and testing dataloaders
-    """
-    if dataset == 'mnist':
-        train_dataloader = data.DataLoader(
-            datasets.MNIST('data',
-                           train=True,
-                           download=True,
-                           transform=transforms.ToTensor()),
-            batch_size=batch_size,
-            shuffle=shuffle,
-            num_workers=num_workers,
-            pin_memory=True)
-        test_dataloader = data.DataLoader(datasets.MNIST(
-            'data',
-            train=False,
-            download=True,
-            transform=transforms.ToTensor()),
-                                          batch_size=batch_size,
-                                          shuffle=shuffle,
-                                          num_workers=num_workers,
-                                          pin_memory=True)
-
-    else:
-        train_dataloader = data.DataLoader(
-            datasets.CIFAR10('data',
-                             train=True,
-                             download=True,
-                             transform=transforms.ToTensor()),
-            batch_size=batch_size,
-            shuffle=shuffle,
-            num_workers=num_workers,
-            pin_memory=True)
-        test_dataloader = data.DataLoader(datasets.CIFAR10(
-            'data',
-            train=False,
-            download=True,
-            transform=transforms.ToTensor()),
-                                          batch_size=batch_size,
-                                          shuffle=shuffle,
-                                          num_workers=num_workers,
-                                          pin_memory=True)
-
-    return train_dataloader, test_dataloader
-
-
-train_dataloader, test_dataloader = load_data()
-print("Dataloaders loaded!")
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
-
 def main(args):
+    # Load the data
+    train_dataloader, test_dataloader = load_data(dataset=args.dataset,
+                                                  batch_size=args.batch_size)
+    print("Dataloaders loaded!")
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     # Initialize the model
     if args.model == 'pixelcnn':
         model = PixelCNN(logits_dist=args.logits_dist, device=device)
