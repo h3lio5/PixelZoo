@@ -10,7 +10,6 @@ class GatedConv2D(nn.Module):
     Part of code taken from https://github.com/pbloem/pixel-models/blob/master/layers.py 
     """
     def __init__(self,
-                 mask_type,
                  in_channels,
                  out_channels,
                  colors=3,
@@ -56,11 +55,9 @@ class GatedConv2D(nn.Module):
         self.register_buffer('hmask', torch.ones_like(self.hStack.weight))
 
         # zero the bottom half rows of the vmask
-        self.vmask[:, :, k // 2 + 1:, :] = 0
+        self.vmask[:, :, k // 2 :, :] = 0
         # zero the right half of the hmask
-        self.hmask[:, :, :, k // 2 + 1:] = 0
-        if mask_type == 'A':
-            self.hmask[:, :, :, k // 2] = 0
+        self.hmask[:, :, :, k // 2:] = 0
 
         # Add connections to "previous" colors (G is allowed to see R, and B is allowed to see R and G)
         m = k // 2  # index of the middle of the convolution
@@ -72,12 +69,12 @@ class GatedConv2D(nn.Module):
 
             if f > 0:
                 self.hmask[f:t, :f, 0, m] = 1
-                self.hmask[f+out_channels:t+out_channels, :f]
+                self.hmask[f+out_channels:t+out_channels, :f, 0, m] = 1
 
             # Connections to "current" colors (but not "future colors", R is not allowed to see G and B)
             if self_connection:
                 self.hmask[f:t, :t, 0, m] = 1
-                self.hmask[f + out_channels:t + out_channels, :f, 0, m] = 1
+                self.hmask[f + out_channels:t + out_channels, :t, 0, m] = 1
 
     def forward(self, x):
         """

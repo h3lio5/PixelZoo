@@ -4,3 +4,4 @@ pixelzoo.egg-info
 data
 pixelzoo/__pycache__
 pixelzoo/models/__pycache__
+images/gatedpixelcnn/
