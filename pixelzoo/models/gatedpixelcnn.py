@@ -18,7 +18,7 @@ class GatedConv2D(nn.Module):
                  gates=True,
                  hv_connection=True,
                  residual_connection=True,
-                 k=7,
+                 k=5,
                  padding=3):
         """
         """
