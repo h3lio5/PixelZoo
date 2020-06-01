@@ -72,10 +72,12 @@ class GatedConv2D(nn.Module):
 
             if f > 0:
                 self.hmask[f:t, :f, 0, m] = 1
+                self.hmask[f+out_channels:t+out_channels, :f]
 
             # Connections to "current" colors (but not "future colors", R is not allowed to see G and B)
             if self_connection:
-                self.hmask[f:t, :f + channels_per_color, 0, m] = 1
+                self.hmask[f:t, :t 0, m] = 1
+                self.hmask[f + out_channels:t + out_channels, :f, 0, m] = 1
 
     def forward(self, x):
         """
@@ -124,7 +126,7 @@ class GatedConv2D(nn.Module):
 class GatedPixelCNN(nn.Module):
     """
     """
-    def __init__(self, c=3, channels=63, n_layers=4, device='cpu'):
+    def __init__(self, c=3, channels=30, n_layers=12, device='cpu'):
         super().__init__()
 
         self.conv1 = nn.Conv2d(c, channels, 1, groups=c)
