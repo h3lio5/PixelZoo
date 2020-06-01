@@ -69,12 +69,12 @@ class GatedConv2D(nn.Module):
 
             if f > 0:
                 self.hmask[f:t, :f, 0, m] = 1
-                self.hmask[f + out_channels:t + out_channels, :f]
+                self.hmask[f + out_channels:t + out_channels, :f, 0, m] = 1
 
             # Connections to "current" colors (but not "future colors", R is not allowed to see G and B)
             if self_connection:
                 self.hmask[f:t, :t, 0, m] = 1
-                self.hmask[f + out_channels:t + out_channels, :f, 0, m] = 1
+                self.hmask[f + channels:t + channels, :t, 0, m] = 1
 
     def forward(self, x):
         """
