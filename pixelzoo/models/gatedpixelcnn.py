@@ -19,7 +19,7 @@ class GatedConv2D(nn.Module):
                  hv_connection=True,
                  residual_connection=True,
                  k=5,
-                 padding=3):
+                 padding=2):
         """
         """
         super().__init__()
