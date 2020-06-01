@@ -69,7 +69,7 @@ def main(args):
             sampled_images = model.sample(64)
             utils.save_image(
                 sampled_images,
-                'images/gatedpixelcnn/cifar10/layers_12_channels_30_0.01__sample_{:02d}.png'.
+                'images/gatedpixelcnn/cifar10/mask_corrected_layers_12_channels_30_0.01__sample_{:02d}.png'.
                 format(epoch),
                 nrow=8,
                 padding=0)
