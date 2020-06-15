@@ -4,7 +4,8 @@ from pixelzoo.dataloader import load_data
 from pixelzoo.models import PixelCNN, GatedPixelCNN
 from pixelzoo.utils import EarlyStopping
 import torch.optim as optim
-import time, os
+import time
+import os
 import numpy as np
 import argparse
 
@@ -16,6 +17,7 @@ def main(args):
     print("Dataloaders loaded!")
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     # Initialize the model
+
     if args.model == 'pixelcnn':
         model = PixelCNN(logits_dist=args.logits_dist, device=device)
     elif args.model == 'gatedpixelcnn':
@@ -37,6 +39,7 @@ def main(args):
         train_error = []
         train_time = time.time()
         model.train()
+
         for step, (images, labels) in enumerate(train_dataloader):
             # nll of the batched data
             loss = model.nll(images.to(device))
@@ -84,10 +87,12 @@ def main(args):
                     np.mean(test_error) / np.log(2), train_time, test_time,
                     sample_time))
         epoch += 1
+
         if callback.early_stop(epoch, np.mean(test_error) / np.log(2)):
             total_time = time.time() - start_time
             print('Early stopping after {} epochs, training time: {} minutes'.
                   format(epoch, total_time / 60))
+
             break
 
 
@@ -98,8 +103,7 @@ if __name__ == '__main__':
         '--model',
         type=str,
         default='pixelcnn',
-        help=
-        'The model you wish to train: pixelcnn, pixelcnn++, gatedpixelcnn, conditionalpixelcnn, pixelsnail'
+        help='The model you wish to train: pixelcnn, pixelcnn++, gatedpixelcnn, conditionalpixelcnn, pixelsnail'
     )
     parser.add_argument(
         '--logits_dist',
