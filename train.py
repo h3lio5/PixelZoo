@@ -5,7 +5,6 @@ from pixelzoo.models import PixelCNN, GatedPixelCNN
 from pixelzoo.utils import EarlyStopping
 import torch.optim as optim
 import time
-import os
 import numpy as np
 import argparse
 
