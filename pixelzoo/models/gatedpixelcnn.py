@@ -9,6 +9,7 @@ class GatedConv2D(nn.Module):
     The 'blind spot' is removed by combining the vertical and horizontal convolution network stacks.
     Part of code taken from https://github.com/pbloem/pixel-models/blob/master/layers.py 
     """
+
     def __init__(self,
                  in_channels,
                  out_channels,
@@ -58,7 +59,6 @@ class GatedConv2D(nn.Module):
         self.vmask[:, :, k // 2:, :] = 0
         # zero the right half of the hmask
         self.hmask[:, :, :, k // 2:] = 0
-
         # Add connections to "previous" colors (G is allowed to see R, and B is allowed to see R and G)
         m = k // 2  # index of the middle of the convolution
         channels_per_color = out_channels // colors  # channels per color
@@ -74,10 +74,17 @@ class GatedConv2D(nn.Module):
             # Connections to "current" colors (but not "future colors", R is not allowed to see G and B)
             if self_connection:
                 self.hmask[f:t, :t, 0, m] = 1
-                self.hmask[f + channels:t + channels, :t, 0, m] = 1
+                self.hmask[f + out_channels:t + out_channels, :t, 0, m] = 1
 
     def forward(self, x):
         """
+        Args:
+            x: if not first layer, then tuple of vertical stack and horizontal 
+               stack outputs, otherwise, a tuple of input images.
+        Returns:
+            return a tuple consisting of the horizontal stack and vertical
+            stack outputs.
+
         """
 
         v_input, h_input = x
@@ -123,19 +130,19 @@ class GatedConv2D(nn.Module):
 class GatedPixelCNN(nn.Module):
     """
     """
+
     def __init__(self, c=3, channels=30, n_layers=12, device='cpu'):
         super().__init__()
 
         self.conv1 = nn.Conv2d(c, channels, 1, groups=c)
         model = [
-            GatedConv2D('A',
-                        channels,
+            GatedConv2D(channels,
                         channels,
                         self_connection=False,
                         residual_connection=False)
         ]
         for _ in range(n_layers - 1):
-            model.extend([GatedConv2D('B', channels, channels)])
+            model.extend([GatedConv2D(channels, channels)])
         self.model = nn.Sequential(*model)
         self.final_layer = nn.Conv2d(channels, 256 * c, 1, groups=c)
 
@@ -161,7 +168,7 @@ class GatedPixelCNN(nn.Module):
 
     def sample(self, n):
         """
-        
+
         """
         samples = torch.zeros(n, 3, 32, 32).to(self.device)
         with torch.no_grad():
