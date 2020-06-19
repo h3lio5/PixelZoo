@@ -16,12 +16,15 @@ source .env/bin/activate
 pip install -r requirements.txt
 pip install -e .
 ```
-## 2. Training Instructions
+## 2. Training Instructions and Results
 ### PixelCNN
  * To train the model with categorical output distribution, run -
 ``` Batchfile 
    python train.py --model=pixelcnn --dataset=mnist --logits_dist=categorical --batch_size=256 
 ```
+ * The model with a categorical distribution over 255 pixel values in the last layer performs much better but takes a little longer to train.
+ * The model converges after training for 42 minutes with a test negative likelihood of 1.0783 bits/dim.
+ ![categorical_image_sample](images/pixelcnn/mnist/0.0001_categorical_sample_15.png)
  * To train the model with sigmoid output distribution, run - 
 ``` Batchfile 
    python train.py --model=pixelcnn --dataset=mnist --logits_dist=sigmoid --batch_size=256 
@@ -31,14 +34,8 @@ pip install -e .
 ## 3. Results
 ### PixelCNN 
  * With a categorical distribution over 255 pixel values in the last layer, the model appears to perform much better but takes a little longer to train.
+ * After training for 47 minutes
  * When the final layer is replaced by sigmoid rather than softmax (categorical) over 255 pixel values, the model preforms worser.
- * To train the model with categorical output distribution, run -
-``` Batchfile 
-   python train.py --model=pixelcnn --dataset=mnist --logits_dist=categorical --batch_size=256 
-```
- * To train the model with sigmoid output distribution, run - 
-``` Batchfile 
-   python train.py --model=pixelcnn --dataset=mnist --logits_dist=sigmoid --batch_size=256 
-```
+ 
 
  
