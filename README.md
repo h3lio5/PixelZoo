@@ -25,8 +25,6 @@ pip install -e .
  * With a categorical distribution over 255 pixel values in the last layer, the model appears to perform much better but takes a little longer to train.
  * When the final layer is replaced by sigmoid rather than softmax (categorical) over 255 pixel values, the model preforms worser.
  * To train the model with categorical output distribution, run -
-   ``` Batchfile
-       python train.py --model=pixelcnn --dataset=mnist --logits_dist=categorical --batch_size=256
-   ```
+   ` python train.py --model=pixelcnn --dataset=mnist --logits_dist=categorical --batch_size=256 `
 
  
