@@ -23,7 +23,7 @@ pip install -e .
    python train.py --model=pixelcnn --dataset=mnist --logits_dist=categorical --batch_size=256 
 ```
  * The model with a categorical distribution over 255 pixel values in the last layer performs much better but takes a little longer to train.
- * The model converges (based on early-stopping criterion) after training for 42 minutes with a test negative log-likelihood of 1.0783 bits/dim.
+ * The model converges (based on early-stopping criterion) after training for 42 minutes with a test negative log-likelihood of 1.0783 bits/dim.     
       ![categorical_image_sample](images/pixelcnn/mnist/0.0001_categorical_sample_15.png)
  * To train the model with sigmoid output distribution, run - 
 ``` Batchfile 
