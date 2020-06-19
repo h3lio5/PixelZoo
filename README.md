@@ -29,14 +29,8 @@ pip install -e .
 ``` Batchfile 
    python train.py --model=pixelcnn --dataset=mnist --logits_dist=sigmoid --batch_size=256 
 ```
- * The model converges after 47 minutes with a test negative log-likelihood of 1.077 bits/dim.
+ * The model converges after 47 minutes with a test negative log-likelihood of 1.077 bits/dim.         
       ![categorical_image_sample](images/pixelcnn/mnist/0.0001_sigmoid_sample_22.png)
 
-## 3. Results
-### PixelCNN 
- * With a categorical distribution over 255 pixel values in the last layer, the model appears to perform much better but takes a little longer to train.
- * After training for 47 minutes
- * When the final layer is replaced by sigmoid rather than softmax (categorical) over 255 pixel values, the model preforms worser.
- 
 
  
