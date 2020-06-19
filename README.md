@@ -17,7 +17,15 @@ pip install -r requirements.txt
 pip install -e .
 ```
 ## 2. Training Instructions
-
+### PixelCNN
+ * To train the model with categorical output distribution, run -
+``` Batchfile 
+   python train.py --model=pixelcnn --dataset=mnist --logits_dist=categorical --batch_size=256 
+```
+ * To train the model with sigmoid output distribution, run - 
+``` Batchfile 
+   python train.py --model=pixelcnn --dataset=mnist --logits_dist=sigmoid --batch_size=256 
+```
 
 
 ## 3. Results
