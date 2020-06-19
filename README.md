@@ -31,7 +31,7 @@ pip install -e .
 ```
  * The model converges after 47 minutes with a test negative log-likelihood of 1.077 bits/dim.         
       ![categorical_image_sample](images/pixelcnn/mnist/0.0001_sigmoid_sample_22.png)
- * I suspect the reason the sigmoid samples are significantly worser than the categorical samples is because both the models were trained with the same architecture -- same number of layers. Maybe the sigmoid model gets a weaker gradient signal that is insufficient to train the model with large layers resulting in underfitting.
+ * I suspect the reason why the sigmoid samples are significantly worser than the categorical samples is because both the models were trained with the same architecture -- same number of layers. Maybe the sigmoid model gets a weaker gradient signal that is insufficient to train the model with large layers resulting in underfitting.
 
 
 
