@@ -30,9 +30,15 @@ pip install -e .
    python train.py --model=pixelcnn --dataset=mnist --logits_dist=sigmoid --batch_size=256 
 ```
  * The model converges (based on early-stopping criterion) after 47 minutes with a test negative log-likelihood of 1.077 bits/dim.         
-      ![categorical_image_sample](images/pixelcnn/mnist/0.0001_sigmoid_sample_22.png)
+      ![sigmoid_image_sample](images/pixelcnn/mnist/0.0001_sigmoid_sample_22.png)
  * I suspect the reason why the sigmoid samples are significantly worser than the categorical samples is because both the models were trained with the same architecture -- same number of layers. Maybe the sigmoid model gets a weaker gradient signal that is insufficient to train the model with large layers resulting in underfitting.
 
-
+### Gated PixelCNN
+  * To train the model for cifar10 dataset, run -
+ ``` Batchfile
+    python train.py --model=gatedpixelcnn --dataset=cifar --batch_size=256
+ ```
+  * The model converged after 5hr 36min (based on the early-stopping criteria).
+      ![gated_cifar_sample](images/gatedpixelcnn/cifar10/sample_18.png)
 
  
