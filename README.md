@@ -38,7 +38,8 @@ pip install -e .
  ``` Batchfile
     python train.py --model=gatedpixelcnn --dataset=cifar --batch_size=256
  ```
-  * The model converged after 5hr 36min (based on the early-stopping criteria).
+  * The model converged after 5hr 36min (based on the early-stopping criteria).     
       ![gated_cifar_sample](images/gatedpixelcnn/cifar10/sample_18.png)
+  * The generated samples lack diversity, I hope to determine the reason why this happens so.
 
  
