@@ -2,7 +2,8 @@ import torch
 from torchvision import utils
 from pixelzoo.dataloader import load_data
 from pixelzoo.models import PixelCNN, GatedPixelCNN
-from pixelzoo.utils import EarlyStopping
+from pixelzoo.utils import EarlyStopping, ProgressBar
+from pixelzoo.optimizer import Lookahead
 import torch.optim as optim
 import time
 import numpy as np
@@ -25,7 +26,9 @@ def main(args):
     model.to(device=device)
 
     # Initialize the optimizer
-    optimizer = optim.Adam(model.parameters())
+    optimizer = Lookahead(optim.Adam(model.parameters()),
+                          la_steps=5, la_alpha=0.5)
+
     # Initialze the EarlyStopping Callback
     callback = EarlyStopping(min_delta=0.01, patience=3)
     start_time = time.time()
@@ -34,7 +37,7 @@ def main(args):
     print("Start training!")
 
     while True:
-
+        pbar = ProgressBar(n_total=len(train_dataloader), desc='Training')
         train_error = []
         train_time = time.time()
         model.train()
@@ -46,20 +49,22 @@ def main(args):
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-
+            pbar(step=step, info={'nll': loss.item()/np.log(2)})
         del loss
         train_time = time.time() - train_time
 
         # compute error on test set
+        pbar = ProgressBar(n_total=len(test_dataloader), desc='Testing')
         test_error = []
         test_time = time.time()
         model.eval()
         with torch.no_grad():
 
-            for images, labels in test_dataloader:
+            for step, (images, labels) in enumerate(test_dataloader):
                 # nll of the test data batch
                 loss = model.nll(images.to(device))
                 test_error.append(loss.item())
+                pbar(step=step, info={'nll': loss.item()/np.log(2)})
 
         del loss
         test_time = time.time() - test_time
@@ -80,7 +85,7 @@ def main(args):
         sample_time = time.time() - sample_start
 
         print(
-            'epoch={}; nll_train={:.7f} bits/dim; nll_te={:.7f} bits/dim; time_train={:.1f}s; time_test={:.1f}s: sampling time={:.1f}'
+            'epoch={}; nll_train={:.7f} bits/dim; nll_te={:.7f} bits/dim; time_train={:.1f}s; time_test={:.1f}s: sampling time={:.1f}s'
             .format(epoch,
                     np.mean(train_error) / np.log(2),
                     np.mean(test_error) / np.log(2), train_time, test_time,

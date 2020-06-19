@@ -1,3 +1,6 @@
+import time
+from colorama import Fore
+
 import torch
 import logging
 import numpy as np
@@ -11,7 +14,7 @@ torch_inf = torch.tensor(np.Inf)
 class EarlyStopping():
     """
     Early stopping callback to speedup convergence and prevent overfitting
-    Implementation inspired from https://github.com/PyTorchLightning/PyTorch-Lightning/blob/master/pytorch_lightning/callbacks/early_st    opping.py#L19-L141
+    Implementation inspired from https://github.com/PyTorchLightning/PyTorch-Lightning/blob/master/pytorch_lightning/callbacks/early_stopping.py#L19-L141
     """
 
     mode_dict = {
@@ -32,10 +35,9 @@ class EarlyStopping():
                         improvement. Default: ``0``.
             patience(int): number of validation epochs with no improvement after which training will be stopped.
             mode: one of {auto, min, max}. In `min` mode, training will stop when the quantity
-                monitored has stopped decreasing; in `max` mode it will stop when the quantity monitored has 
+                monitored has stopped decreasing; in `max` mode it will stop when the quantity monitored has
                 stopped increasing; in `auto` mode, the direction is automatically inferred from the name of the
                 monitored quantity.
-
         """
 
         self.wait = 0
@@ -91,3 +93,69 @@ class EarlyStopping():
                 stop_training = True
 
         return stop_training
+
+
+class ProgressBar(object):
+    '''
+    custom progress bar
+    Example:
+        >>> pbar = ProgressBar(n_total=30,desc='training')
+        >>> step = 2
+        >>> pbar(step=step)
+    '''
+
+    def __init__(self, n_total, width=30, desc='Training'):
+        self.width = width
+        self.n_total = n_total
+        self.start_time = time.time()
+        self.desc = desc
+
+    def __call__(self, step, info={}):
+        now = time.time()
+        current = step + 1
+        recv_per = current / self.n_total
+        bar = Fore.BLUE + f'\r[{self.desc}] {current}/{self.n_total} ' + Fore.GREEN + '[' 
+        if recv_per >= 1:
+            recv_per = 1
+        prog_width = int(self.width * recv_per)
+        if prog_width > 0:
+            bar += '=' * (prog_width - 1)
+            if current < self.n_total:
+                bar += ">"
+            else:
+                bar += '='
+        bar += '.' * (self.width - prog_width)
+        bar += ']'
+        show_bar = f"{bar}"
+        time_per_unit = (now - self.start_time) / current
+        if current < self.n_total:
+            eta = time_per_unit * (self.n_total - current)
+            if eta > 3600:
+                eta_format = ('%d:%02d:%02d hr' %
+                              (eta // 3600, (eta % 3600) // 60, eta % 60))
+            elif eta > 60:
+                eta_format = '%d:%02d min' % (eta // 60, eta % 60)
+            else:
+                eta_format = '%d s' % eta
+            time_info = f' - ETA: {eta_format}'
+        else:
+            if time_per_unit >= 1:
+                time_info = f' {time_per_unit:.1f} s/step'
+            elif time_per_unit >= 1e-3:
+                time_info = f' {time_per_unit * 1e3:.1f} ms/step'
+            else:
+                time_info = f' {time_per_unit * 1e6:.1f} us/step'
+
+        show_bar += time_info
+        if len(info) != 0:
+            show_info = f'{show_bar} ' + Fore.RED + \
+                        "-".join([f' {key}: {value:.4f} bits/dim ' for key, 
+                                  value in info.items()]) + Fore.GREEN
+            print(show_info, end='')
+            # Move to the next line after the last iteration of the training epoch
+            # so that the progress bar for the testing loop doesn't replace that of
+            # the training loop
+            if current == self.n_total:
+                print('')
+        else:
+            print(show_bar, end='')
