@@ -119,3 +119,10 @@ class PixelCNN(nn.Module):
                         samples[:, :, r, c] = torch.bernoulli(probs)
 
         return samples.cpu()
+    
+
+
+
+
+
+

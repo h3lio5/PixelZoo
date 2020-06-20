@@ -45,6 +45,7 @@ def main(args):
         for step, (images, labels) in enumerate(train_dataloader):
             # nll of the batched data
             loss = model.nll(images.to(device))
+<<<<<<< Updated upstream
             train_error.append(loss.item())
             optimizer.zero_grad()
             loss.backward()
@@ -125,3 +126,33 @@ if __name__ == '__main__':
     load_data(args.dataset, args.batch_size)
 
     main(args)
+=======
+            test_error.append(loss.item())
+
+    test_time = time.time() - test_time
+
+    # sample images
+    model.eval()
+    with torch.no_grad():
+        sampled_images = model.sample(64)
+        utils.save_image(
+            sampled_images,
+            'images/pixelcnn/mnist/sample_{:02d}.png'.format(epoch + 1),
+            nrow=12,
+            padding=0)
+    print(
+        'epoch={}; nll_train={:.7f}; nll_te={:.7f}; time_train={:.1f}s; time_test={:.1f}s'
+        .format(epoch + 1, np.mean(train_error), np.mean(test_error),
+                train_time, test_time))
+
+
+
+
+
+
+
+
+
+
+
+>>>>>>> Stashed changes
